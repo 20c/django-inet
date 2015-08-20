@@ -1,10 +1,27 @@
 
 import ipaddress
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
 import re
 
+class IPAddressValidator(object):
+    """
+    Validates values to be either a v4 or 6 ip address depending
+    on the version of the field it is attached to
+    """
+    def __init__(self, field):
+        self.field = field
+    
+    def __call__(self, value):
+        try:
+            if self.field.version == 4:
+                ipaddress.IPv4Address(value)
+            elif self.field.version == 6:
+                ipaddress.IPv6Address(value)
+        except ipaddress.AddressValueError:
+            raise ValidationError("Needs to be a valid v%d ip address" % self.field.version)
 
 class ASNField(models.PositiveIntegerField):
     """
@@ -22,6 +39,7 @@ class IPAddressField(models.Field):
     max_length = 39
     description = _("IP Address")
     default_error_messages = {}
+    default_validators = []
 
     __metaclass__ = models.SubfieldBase
     version = None
@@ -29,6 +47,8 @@ class IPAddressField(models.Field):
 # TESTME - doesn't allow blank values
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
+
+        self.default_validators.append(IPAddressValidator(self))
 
         version = kwargs.pop('version', None)
         if version:
@@ -54,8 +74,9 @@ class IPAddressField(models.Field):
         return self.__ctor(value)
 
     def value_to_string(self, obj):
-      value = self._get_val_from_obj(obj)
-      return str(value)
+        value = self._get_val_from_obj(obj)
+        return str(value)
+
 
 # TODO - make errors throw Validation error
 class IPPrefixField(models.Field):
