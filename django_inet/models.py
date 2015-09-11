@@ -23,6 +23,27 @@ class IPAddressValidator(object):
         except ipaddress.AddressValueError:
             raise ValidationError("Needs to be a valid v%d ip address" % self.field.version)
 
+class IPPrefixValidator(object):
+    "Validates values to be either a v4 or v6 prefix"
+    def __init__(self, field):
+        self.field = field
+    
+    def __call__(self, value):
+        try:
+            if self.field.version == 4:
+                ipaddress.IPv4Network(value)
+            elif self.field.version == 6:
+                ipaddress.IPv6Network(value)
+            else:
+                try:
+                    ipaddress.ip_network(value)
+                except ValueError, inst:
+                    raise ValidationError(inst)
+                    
+        except ipaddress.AddressValueError:
+            raise ValidationError("Needs to be a valid v%d prefix" % self.field.version)
+
+
 class ASNField(models.PositiveIntegerField):
     """
     Autonomous System Number
