@@ -24,7 +24,9 @@ class IPAddressValidator(object):
             raise ValidationError("Needs to be a valid v%d ip address" % self.field.version)
 
 class IPPrefixValidator(object):
-    "Validates values to be either a v4 or v6 prefix"
+    """
+    Validates values to be either a v4 or v6 prefix
+    """
     def __init__(self, field):
         self.field = field
     
