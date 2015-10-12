@@ -53,7 +53,6 @@ class URLField(models.URLField):
     default_validators = [URLValidator()]
 
     def __init__(self, *args, **kwargs):
-        print "URLField init"
         kwargs["max_length"] = 255
         super(URLField, self).__init__(*args, **kwargs)
 
