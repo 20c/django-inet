@@ -99,6 +99,9 @@ class IPAddressField(models.Field):
     def get_internal_type(self):
         return "CharField"
 
+    def get_prep_value(self, value):
+        return str(value)
+
     def to_python(self, value):
         if isinstance(value, IPAddressField):
             return value
@@ -137,6 +140,9 @@ class IPPrefixField(models.Field):
 
     def get_internal_type(self):
         return "CharField"
+
+    def get_prep_value(self):
+        return str(value)
 
     def to_python(self, value):
         if isinstance(value, IPPrefixField):
