@@ -100,7 +100,9 @@ class IPAddressField(models.Field):
         return "CharField"
 
     def get_prep_value(self, value):
-        return str(value)
+        if value:
+            return str(value)
+        return None
 
     def to_python(self, value):
         if isinstance(value, IPAddressField):
@@ -142,7 +144,9 @@ class IPPrefixField(models.Field):
         return "CharField"
 
     def get_prep_value(self):
-        return str(value)
+        if value:
+            return str(value)
+        return None
 
     def to_python(self, value):
         if isinstance(value, IPPrefixField):
