@@ -4,11 +4,11 @@ django internet utilities
 
 ## Quickstart
 
-Install django-inet::
+Install django-inet
 
     pip install django-inet
 
-Then use it in a project::
+Then use it in a project
 
-    import django-inet
+    import django_inet
 
