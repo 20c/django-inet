@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator as DjangoURLValidator
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
-import re
+
 
 class IPAddressValidator(object):
     """
@@ -23,6 +23,7 @@ class IPAddressValidator(object):
                 ipaddress.IPv6Address(value)
         except ipaddress.AddressValueError:
             raise ValidationError("Needs to be a valid v%d ip address" % self.field.version)
+
 
 class IPPrefixValidator(object):
     """
@@ -46,8 +47,10 @@ class IPPrefixValidator(object):
         except ipaddress.AddressValueError:
             raise ValidationError("Needs to be a valid v%d prefix" % self.field.version)
 
+
 class URLValidator(DjangoURLValidator):
     schemes = ["http", "https", "ftp", "ftps", "telnet"]
+
 
 class URLField(models.URLField):
     default_validators = [URLValidator()]
@@ -55,6 +58,7 @@ class URLField(models.URLField):
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 255
         super(URLField, self).__init__(*args, **kwargs)
+
 
 class ASNField(models.PositiveIntegerField):
     """
@@ -142,11 +146,6 @@ class IPPrefixField(models.Field):
 
     def get_internal_type(self):
         return "CharField"
-
-    def get_prep_value(self):
-        if value:
-            return str(value)
-        return None
 
     def to_python(self, value):
         if isinstance(value, IPPrefixField):
