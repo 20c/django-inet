@@ -1,2 +1,4 @@
-include facsimile/requirements.txt
+include LICENSE
+recursive-include facsimile *.txt
+recursive-include django_inet *.py
 include facsimile/VERSION
