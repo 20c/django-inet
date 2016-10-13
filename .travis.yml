@@ -6,10 +6,11 @@ branches:
     - gh-pages
 env:
   - TOX_ENV=py27
-before_install:
-  - pip install codecov
 install:
+  - python -m pip install -U pip
+  - python -m easy_install -U setuptools
   - pip install tox
+  - pip install codecov
 script:
   - tox -e $TOX_ENV
 after_success:
