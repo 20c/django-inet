@@ -3,13 +3,17 @@
 
 ## [Unreleased]
 ### Added
-- test stubs
-
 ### Fixed
-- correct requirements
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+
+## [0.2.0]
+### Added
+- test stubs
+
+### Fixed
+- correct requirements
 
