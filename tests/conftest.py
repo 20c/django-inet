@@ -13,7 +13,7 @@ def pytest_configure():
             'django.contrib.contenttypes',
             'django.contrib.admin',
             'django.contrib.sessions',
-            'django_blackhole',
+            'django_inet',
         ],
 
         DATABASE_ENGINE='django.db.backends.sqlite3',

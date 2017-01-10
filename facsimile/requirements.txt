@@ -1,2 +1,2 @@
-django>=1.8, <1.9
+future
 ipaddress>=1; python_version<'3.3'

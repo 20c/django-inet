@@ -1,10 +1,13 @@
 
+from builtins import str
+from builtins import object
 import ipaddress
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator as DjangoURLValidator
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
+from future.utils import with_metaclass
 
 
 class IPAddressValidator(object):
@@ -41,7 +44,7 @@ class IPPrefixValidator(object):
             else:
                 try:
                     ipaddress.ip_network(value)
-                except ValueError, inst:
+                except ValueError as inst:
                     raise ValidationError(inst)
                     
         except ipaddress.AddressValueError:
@@ -68,7 +71,7 @@ class ASNField(models.PositiveIntegerField):
         super(ASNField, self).__init__(*args, **kwargs)
 
 
-class IPAddressField(models.Field):
+class IPAddressField(with_metaclass(models.SubfieldBase, models.Field)):
     """
     IP Address
     """
@@ -77,8 +80,6 @@ class IPAddressField(models.Field):
     description = _("IP Address")
     default_error_messages = {}
     default_validators = []
-
-    __metaclass__ = models.SubfieldBase
     version = None
 
 # TESTME - doesn't allow blank values
@@ -121,13 +122,11 @@ class IPAddressField(models.Field):
 
 
 # TODO - make errors throw Validation error
-class IPPrefixField(models.Field):
+class IPPrefixField(with_metaclass(models.SubfieldBase, models.Field)):
     empty_strings_allowed = True
     max_length = 43
     description = _("IP Prefix")
     default_error_messages = {}
-
-    __metaclass__ = models.SubfieldBase
     version = None
 
     def __init__(self, *args, **kwargs):
@@ -165,13 +164,11 @@ class IPPrefixField(models.Field):
         return smart_text(self._get_val_from_obj(obj))
 
 
-class MacAddressField(models.Field):
+class MacAddressField(with_metaclass(models.SubfieldBase, models.Field)):
     empty_strings_allowed = True
     max_length = 17
     description = _("Mac Address")
     default_error_messages = {}
-
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
