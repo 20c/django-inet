@@ -184,7 +184,6 @@ class IPPrefixField(ConvertOnAssignField):
 
 class MacAddressField(ConvertOnAssignField):
     """
-
     """
     empty_strings_allowed = True
     max_length = 17

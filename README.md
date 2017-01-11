@@ -24,6 +24,18 @@ import django_inet
 ```
 
 
+Provides:
+
+```py
+ASNField()
+IPAddressField(version=None)
+IPPrefixField([version=None)
+```
+
+Version can be set to 4 or 6 to force a version, or left as None to use
+either.
+
+
 ### License
 
 Copyright 2014 20C, LLC
