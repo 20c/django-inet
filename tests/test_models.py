@@ -28,6 +28,15 @@ class ModelTests(TestCase):
         model = FullModel()
         model.full_clean()
 
+    def test_asn(self):
+        model = FullModel()
+        model.asn = 42
+        assert 42 == model.asn
+
+        with pytest.raises(ValidationError):
+            model.asn = 'invalid'
+            model.full_clean()
+
     def test_ipaddress(self):
         model = FullModel()
         model.ip_address = '10.0.0.0'
@@ -58,4 +67,14 @@ class ModelTests(TestCase):
 
         with pytest.raises(ValidationError):
             model.prefix = 'invalid'
+
+    def test_mac(self):
+        model = FullModel()
+        model.mac = 'Ff:00:00:12:34:56'
+        model.full_clean()
+        assert 'Ff:00:00:12:34:56' == model.mac
+
+        with pytest.raises(ValidationError):
+            model.mac = 'invalid'
+            model.full_clean()
 

@@ -3,15 +3,9 @@ import ipaddress
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator as DjangoURLValidator
+from django.core.validators import RegexValidator
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
-
-
-# add unicode() in py3
-try:
-    type(unicode)
-except NameError:
-    unicode = lambda s: str(s)
 
 
 class ConvertOnAssign(object):
@@ -22,7 +16,7 @@ class ConvertOnAssign(object):
     def __init__(self, field):
         self.field = field
 
-    def __get__(self, obj, type=None):
+    def __get__(self, obj, typ=None):
         if obj is None:
             return self
         return obj.__dict__[self.field.name]
@@ -57,19 +51,7 @@ class IPPrefixValidator(object):
         self.field = field
     
     def __call__(self, value):
-        try:
-            if self.field.version == 4:
-                ipaddress.IPv4Network(value)
-            elif self.field.version == 6:
-                ipaddress.IPv6Network(value)
-            else:
-                try:
-                    ipaddress.ip_network(value)
-                except ValueError as inst:
-                    raise ValidationError(inst)
-                    
-        except ipaddress.AddressValueError:
-            raise ValidationError("Needs to be a valid v%d prefix" % self.field.version)
+        self.field._ctor(value)
 
 
 class URLValidator(DjangoURLValidator):
@@ -95,7 +77,7 @@ class ASNField(models.PositiveIntegerField):
 def wrap_ip_ctor(ctor):
     def func(value):
         try:
-            return ctor(unicode(value))
+            return ctor(smart_text(value))
 
         except (ValueError, ipaddress.AddressValueError) as e:
             raise ValidationError(e)
@@ -114,16 +96,6 @@ class IPAddressField(ConvertOnAssignField):
     default_validators = []
     version = None
 
-    def __get__(self, obj, type=None):
-        raise Exception("setttttt")
-        if obj is None:
-            return self
-        return obj.__dict__[self.name]
-
-    def __set__(self, obj, value):
-        raise Exception("setttttt")
-        obj.__dict__[self.name] = self.field.to_python(value)
-
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
 
@@ -132,26 +104,15 @@ class IPAddressField(ConvertOnAssignField):
         version = kwargs.pop('version', None)
         if version:
             if version == 4:
-                self.__ctor = wrap_ip_ctor(ipaddress.IPv4Address)
+                self._ctor = wrap_ip_ctor(ipaddress.IPv4Address)
             elif version == 6:
-                self.__ctor = wrap_ip_ctor(ipaddress.IPv6Address)
+                self._ctor = wrap_ip_ctor(ipaddress.IPv6Address)
             else:
                 raise Exception('Unknown version')
         else:
-            self.__ctor = wrap_ip_ctor(ipaddress.ip_address)
+            self._ctor = wrap_ip_ctor(ipaddress.ip_address)
 
         super(IPAddressField, self).__init__(*args, **kwargs)
-
-    def _ctor(self, value):
-        try:
-            return self.__ctor(unicode(value))
-
-        except (ValueError, ipaddress.AddressValueError):
-            if self.version:
-                ver = 'v{}'.format(self.version)
-            else:
-                ver = ''
-            raise ValidationError("Invalid IP{} address".format(ver))
 
     def get_internal_type(self):
         return "CharField"
@@ -191,13 +152,13 @@ class IPPrefixField(ConvertOnAssignField):
         version = kwargs.pop('version', None)
         if version:
             if version == 4:
-                self.__ctor = wrap_ip_ctor(ipaddress.IPv4Network)
+                self._ctor = wrap_ip_ctor(ipaddress.IPv4Network)
             elif version == 6:
-                self.__ctor = wrap_ip_ctor(ipaddress.IPv6Network)
+                self._ctor = wrap_ip_ctor(ipaddress.IPv6Network)
             else:
                 raise Exception('Unknown version')
         else:
-            self.__ctor = wrap_ip_ctor(ipaddress.ip_network)
+            self._ctor = wrap_ip_ctor(ipaddress.ip_network)
 
         super(IPPrefixField, self).__init__(*args, **kwargs)
 
@@ -205,14 +166,13 @@ class IPPrefixField(ConvertOnAssignField):
         return "CharField"
 
     def to_python(self, value):
-        if isinstance(value, IPPrefixField):
+        if isinstance(value, ipaddress._BaseNetwork):
             return value
         if not value:
             return None
-        return self.__ctor(value)
+        return self._ctor(value)
 
     def get_prep_value(self, value):
-        # TODO should validate here?
         value = super(IPPrefixField, self).get_prep_value(value)
         if value is None:
             return None
@@ -223,14 +183,22 @@ class IPPrefixField(ConvertOnAssignField):
 
 
 class MacAddressField(ConvertOnAssignField):
+    """
+
+    """
     empty_strings_allowed = True
     max_length = 17
     description = _("Mac Address")
     default_error_messages = {}
+    default_validators = []
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
         super(MacAddressField, self).__init__(*args, **kwargs)
+
+        self.default_validators.append(
+            RegexValidator(r'(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$')
+        )
 
     def get_internal_type(self):
         return "CharField"
