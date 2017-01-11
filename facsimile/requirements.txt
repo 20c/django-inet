@@ -1,2 +1,1 @@
-future
 ipaddress>=1; python_version<'3.3'

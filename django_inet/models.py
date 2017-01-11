@@ -1,13 +1,40 @@
 
-from builtins import str
-from builtins import object
 import ipaddress
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator as DjangoURLValidator
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
-from future.utils import with_metaclass
+
+
+# add unicode() in py3
+try:
+    type(unicode)
+except NameError:
+    unicode = lambda s: str(s)
+
+
+class ConvertOnAssign(object):
+    """
+    Calls `field.to_python()` on assign
+
+    """
+    def __init__(self, field):
+        self.field = field
+
+    def __get__(self, obj, type=None):
+        if obj is None:
+            return self
+        return obj.__dict__[self.field.name]
+
+    def __set__(self, obj, value):
+        obj.__dict__[self.field.name] = self.field.to_python(value)
+
+
+class ConvertOnAssignField(models.Field):
+    def contribute_to_class(self, cls, name):
+        super(ConvertOnAssignField, self).contribute_to_class(cls, name)
+        setattr(cls, name, ConvertOnAssign(self))
 
 
 class IPAddressValidator(object):
@@ -19,13 +46,7 @@ class IPAddressValidator(object):
         self.field = field
     
     def __call__(self, value):
-        try:
-            if self.field.version == 4:
-                ipaddress.IPv4Address(value)
-            elif self.field.version == 6:
-                ipaddress.IPv6Address(value)
-        except ipaddress.AddressValueError:
-            raise ValidationError("Needs to be a valid v%d ip address" % self.field.version)
+        self.field._ctor(value)
 
 
 class IPPrefixValidator(object):
@@ -71,7 +92,18 @@ class ASNField(models.PositiveIntegerField):
         super(ASNField, self).__init__(*args, **kwargs)
 
 
-class IPAddressField(with_metaclass(models.SubfieldBase, models.Field)):
+def wrap_ip_ctor(ctor):
+    def func(value):
+        try:
+            return ctor(unicode(value))
+
+        except (ValueError, ipaddress.AddressValueError) as e:
+            raise ValidationError(e)
+
+    return func
+
+
+class IPAddressField(ConvertOnAssignField):
     """
     IP Address
     """
@@ -82,7 +114,16 @@ class IPAddressField(with_metaclass(models.SubfieldBase, models.Field)):
     default_validators = []
     version = None
 
-# TESTME - doesn't allow blank values
+    def __get__(self, obj, type=None):
+        raise Exception("setttttt")
+        if obj is None:
+            return self
+        return obj.__dict__[self.name]
+
+    def __set__(self, obj, value):
+        raise Exception("setttttt")
+        obj.__dict__[self.name] = self.field.to_python(value)
+
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
 
@@ -91,15 +132,26 @@ class IPAddressField(with_metaclass(models.SubfieldBase, models.Field)):
         version = kwargs.pop('version', None)
         if version:
             if version == 4:
-                self.__ctor = ipaddress.IPv4Address
+                self.__ctor = wrap_ip_ctor(ipaddress.IPv4Address)
             elif version == 6:
-                self.__ctor = ipaddress.IPv6Address
+                self.__ctor = wrap_ip_ctor(ipaddress.IPv6Address)
             else:
                 raise Exception('Unknown version')
         else:
-            self.__ctor = ipaddress.ip_address
+            self.__ctor = wrap_ip_ctor(ipaddress.ip_address)
 
         super(IPAddressField, self).__init__(*args, **kwargs)
+
+    def _ctor(self, value):
+        try:
+            return self.__ctor(unicode(value))
+
+        except (ValueError, ipaddress.AddressValueError):
+            if self.version:
+                ver = 'v{}'.format(self.version)
+            else:
+                ver = ''
+            raise ValidationError("Invalid IP{} address".format(ver))
 
     def get_internal_type(self):
         return "CharField"
@@ -109,20 +161,24 @@ class IPAddressField(with_metaclass(models.SubfieldBase, models.Field)):
             return str(value)
         return None
 
+    def from_db_value(self, value, expression, connection, context):
+        if not value:
+            return None
+        return self._ctor(value)
+
     def to_python(self, value):
-        if isinstance(value, IPAddressField):
+        if isinstance(value, ipaddress._BaseAddress):
             return value
         if not value:
             return None
-        return self.__ctor(value)
+        return self._ctor(value)
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
         return str(value)
 
 
-# TODO - make errors throw Validation error
-class IPPrefixField(with_metaclass(models.SubfieldBase, models.Field)):
+class IPPrefixField(ConvertOnAssignField):
     empty_strings_allowed = True
     max_length = 43
     description = _("IP Prefix")
@@ -131,15 +187,17 @@ class IPPrefixField(with_metaclass(models.SubfieldBase, models.Field)):
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
-        if hasattr(kwargs, 'version'):
-            if kwargs['version'] == 4:
-                self.__ctor = ipaddress.IPv4Network
-            elif kwargs['version'] == 6:
-                self.__ctor = ipaddress.IPv6Network
+
+        version = kwargs.pop('version', None)
+        if version:
+            if version == 4:
+                self.__ctor = wrap_ip_ctor(ipaddress.IPv4Network)
+            elif version == 6:
+                self.__ctor = wrap_ip_ctor(ipaddress.IPv6Network)
             else:
                 raise Exception('Unknown version')
         else:
-            self.__ctor = ipaddress.ip_network
+            self.__ctor = wrap_ip_ctor(ipaddress.ip_network)
 
         super(IPPrefixField, self).__init__(*args, **kwargs)
 
@@ -164,7 +222,7 @@ class IPPrefixField(with_metaclass(models.SubfieldBase, models.Field)):
         return smart_text(self._get_val_from_obj(obj))
 
 
-class MacAddressField(with_metaclass(models.SubfieldBase, models.Field)):
+class MacAddressField(ConvertOnAssignField):
     empty_strings_allowed = True
     max_length = 17
     description = _("Mac Address")

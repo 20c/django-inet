@@ -9,9 +9,12 @@ env:
   - TOX_ENV=py33-django18
   - TOX_ENV=py34-django18
   - TOX_ENV=py35-django18
-  - TOX_ENV=py27-django19
+  - TOX_ENV=py27-django18
   - TOX_ENV=py34-django19
   - TOX_ENV=py35-django19
+  - TOX_ENV=py27-django110
+  - TOX_ENV=py34-django110
+  - TOX_ENV=py35-django110
 before_install:
   - sudo apt-get -qq update
 install:
