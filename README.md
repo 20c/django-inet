@@ -9,6 +9,23 @@
 
 django internet utilities
 
+
+## Provides
+
+```py
+ASNField()
+IPAddressField(version=None)
+IPPrefixField(version=None)
+```
+
+Addresses and Prefixes are stored and strings and converted to ipaddress.IPv{4,6}{Address,Prefix} classes.
+
+Version can be set to 4 or 6 to force a version, or left as None to use
+either.
+
+Tested in python 2.7, 3.3, 3.4, 3.5 and django 1.8, 1.9, 1.10
+
+
 ## Quickstart
 
 Install django-inet
@@ -23,17 +40,6 @@ Then use it in a project
 import django_inet
 ```
 
-
-Provides:
-
-```py
-ASNField()
-IPAddressField(version=None)
-IPPrefixField(version=None)
-```
-
-Version can be set to 4 or 6 to force a version, or left as None to use
-either.
 
 
 ### License
