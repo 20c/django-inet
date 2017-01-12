@@ -1,19 +1,23 @@
 
-# Change Log
+# django-inet changes
 
 ## [Unreleased]
+### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+
+## [0.3.0]
 ### Added
 - python 3 support
 - django 1.10 support
 - better tests
 
-### Fixed
-### Changed
 ### Deprecated
 - URLField
-
-### Removed
-### Security
 
 
 ## [0.2.0]
