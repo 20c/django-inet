@@ -3,6 +3,10 @@
 
 ## [Unreleased]
 ### Added
+- python 3 support
+- django 1.10 support
+- better tests
+
 ### Fixed
 ### Changed
 ### Deprecated
