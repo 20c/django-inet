@@ -10,6 +10,8 @@
 ### Fixed
 ### Changed
 ### Deprecated
+- URLField
+
 ### Removed
 ### Security
 

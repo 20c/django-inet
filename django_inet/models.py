@@ -6,6 +6,7 @@ from django.core.validators import URLValidator as DjangoURLValidator
 from django.core.validators import RegexValidator
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
+import warnings
 
 
 class ConvertOnAssign(object):
@@ -88,6 +89,10 @@ class URLField(models.URLField):
     default_validators = [URLValidator()]
 
     def __init__(self, *args, **kwargs):
+        warnings.warn(
+            "URLField has been deprecated and will be removed in version 1",
+            DeprecationWarning, stacklevel=2
+            )
         kwargs["max_length"] = 255
         super(URLField, self).__init__(*args, **kwargs)
 
