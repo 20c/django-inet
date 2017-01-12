@@ -31,6 +31,30 @@ class ConvertOnAssignField(models.Field):
         setattr(cls, name, ConvertOnAssign(self))
 
 
+def addr_ctor(version=None):
+    if version:
+        if version == 4:
+            return ipaddress.IPv4Address
+        elif version == 6:
+            return ipaddress.IPv6Address
+        else:
+            raise ValueError('unknown version')
+    else:
+        return ipaddress.ip_address
+
+
+def prefix_ctor(version=None):
+    if version:
+        if version == 4:
+            return ipaddress.IPv4Network
+        elif version == 6:
+            return ipaddress.IPv6Network
+        else:
+            raise ValueError('unknown version')
+    else:
+        return ipaddress.ip_network
+
+
 class IPAddressValidator(object):
     """
     Validates values to be either a v4 or 6 ip address depending
@@ -40,7 +64,8 @@ class IPAddressValidator(object):
         self.field = field
     
     def __call__(self, value):
-        self.field._ctor(value)
+        # can't use ctor here because serializer fields don't have it
+        wrap_ip_ctor(addr_ctor(self.field.version))(value)
 
 
 class IPPrefixValidator(object):
@@ -51,7 +76,8 @@ class IPPrefixValidator(object):
         self.field = field
     
     def __call__(self, value):
-        self.field._ctor(value)
+        # can't use ctor here because serializer fields don't have it
+        wrap_ip_ctor(prefix_ctor(self.field.version))(value)
 
 
 class URLValidator(DjangoURLValidator):
@@ -99,20 +125,12 @@ class IPAddressField(ConvertOnAssignField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
 
-        self.default_validators.append(IPAddressValidator(self))
-
-        version = kwargs.pop('version', None)
-        if version:
-            if version == 4:
-                self._ctor = wrap_ip_ctor(ipaddress.IPv4Address)
-            elif version == 6:
-                self._ctor = wrap_ip_ctor(ipaddress.IPv6Address)
-            else:
-                raise Exception('Unknown version')
-        else:
-            self._ctor = wrap_ip_ctor(ipaddress.ip_address)
+        self.version = kwargs.pop('version', None)
+        self._ctor = wrap_ip_ctor(addr_ctor(self.version))
 
         super(IPAddressField, self).__init__(*args, **kwargs)
+
+        self.default_validators.append(IPAddressValidator(self))
 
     def get_internal_type(self):
         return "CharField"
@@ -149,18 +167,12 @@ class IPPrefixField(ConvertOnAssignField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
 
-        version = kwargs.pop('version', None)
-        if version:
-            if version == 4:
-                self._ctor = wrap_ip_ctor(ipaddress.IPv4Network)
-            elif version == 6:
-                self._ctor = wrap_ip_ctor(ipaddress.IPv6Network)
-            else:
-                raise Exception('Unknown version')
-        else:
-            self._ctor = wrap_ip_ctor(ipaddress.ip_network)
+        self.version = kwargs.pop('version', None)
+        self._ctor = wrap_ip_ctor(prefix_ctor(self.version))
 
         super(IPPrefixField, self).__init__(*args, **kwargs)
+
+        self.default_validators.append(IPAddressValidator(self))
 
     def get_internal_type(self):
         return "CharField"
