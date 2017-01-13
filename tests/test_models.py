@@ -32,6 +32,7 @@ class ModelTests(TestCase):
         model = FullModel()
         model.asn = 42
         assert 42 == model.asn
+        model.full_clean()
 
         with pytest.raises(ValidationError):
             model.asn = 'invalid'

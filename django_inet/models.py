@@ -167,6 +167,7 @@ class IPPrefixField(ConvertOnAssignField):
     max_length = 43
     description = _("IP Prefix")
     default_error_messages = {}
+    default_validators = []
     version = None
 
     def __init__(self, *args, **kwargs):
@@ -177,7 +178,7 @@ class IPPrefixField(ConvertOnAssignField):
 
         super(IPPrefixField, self).__init__(*args, **kwargs)
 
-        self.default_validators.append(IPAddressValidator(self))
+        self.default_validators.append(IPPrefixValidator(self))
 
     def get_internal_type(self):
         return "CharField"
