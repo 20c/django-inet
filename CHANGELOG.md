@@ -10,6 +10,11 @@
 ### Security
 
 
+## [0.3.1]
+### Fixed
+- IPPrefixValidator overwriting all field meta
+
+
 ## [0.3.0]
 ### Added
 - python 3 support
