@@ -5,6 +5,7 @@ branches:
   except:
     - gh-pages
 env:
+  - TOX_ENV=py27-cov-init
   - TOX_ENV=py27-django18
   - TOX_ENV=py33-django18
   - TOX_ENV=py34-django18
@@ -15,6 +16,7 @@ env:
   - TOX_ENV=py27-django110
   - TOX_ENV=py34-django110
   - TOX_ENV=py35-django110
+  - TOX_ENV=py27-cov-report
 before_install:
   - sudo apt-get -qq update
 install:
@@ -26,4 +28,3 @@ script:
   - tox -e $TOX_ENV
 after_success:
   - codecov
-
