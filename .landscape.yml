@@ -1,5 +1,5 @@
 
-strictness: veryhigh
+strictness: high
 
 uses:
   - django
@@ -9,6 +9,11 @@ requirements:
 
 
 pep8:
+  full: true
   options:
-    hang-closing: true
+    hang-closing: 1
     max-line-length: 79
+
+pylint:
+  disable:
+    - too-few-public-methods
