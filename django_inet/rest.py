@@ -6,6 +6,7 @@ from .models import IPAddressValidator, IPPrefixValidator
 
 class IPAddressField(serializers.CharField):
     version = 0
+
     def __init__(self, **kwargs):
         self.version = kwargs.pop("version", None)
         super(IPAddressField, self).__init__(**kwargs)
@@ -14,6 +15,7 @@ class IPAddressField(serializers.CharField):
 
 class IPPrefixField(serializers.CharField):
     version = 0
+
     def __init__(self, **kwargs):
         self.version = kwargs.pop("version", None)
         super(IPPrefixField, self).__init__(**kwargs)

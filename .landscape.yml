@@ -1,0 +1,14 @@
+
+strictness: veryhigh
+
+uses:
+  - django
+
+requirements:
+  - facsimile/requirements.txt
+
+
+pep8:
+  options:
+    hang-closing: true
+    max-line-length: 79

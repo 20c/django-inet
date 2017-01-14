@@ -63,7 +63,7 @@ class IPAddressValidator(object):
     """
     def __init__(self, field):
         self.field = field
-    
+
     def __call__(self, value):
         # can't use ctor here because serializer fields don't have it
         wrap_ip_ctor(addr_ctor(self.field.version))(value)
@@ -75,7 +75,7 @@ class IPPrefixValidator(object):
     """
     def __init__(self, field):
         self.field = field
-    
+
     def __call__(self, value):
         # can't use ctor here because serializer fields don't have it
         wrap_ip_ctor(prefix_ctor(self.field.version))(value)
