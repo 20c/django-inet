@@ -123,8 +123,6 @@ class IPAddressField(ConvertOnAssignField):
     empty_strings_allowed = True
     max_length = 39
     description = _("IP Address")
-    default_error_messages = {}
-    default_validators = []
     version = None
 
     def __init__(self, *args, **kwargs):
@@ -135,7 +133,7 @@ class IPAddressField(ConvertOnAssignField):
 
         super(IPAddressField, self).__init__(*args, **kwargs)
 
-        self.default_validators.append(IPAddressValidator(self))
+        self.validators.append(IPAddressValidator(self))
 
     def get_internal_type(self):
         return "CharField"
@@ -166,8 +164,6 @@ class IPPrefixField(ConvertOnAssignField):
     empty_strings_allowed = True
     max_length = 43
     description = _("IP Prefix")
-    default_error_messages = {}
-    default_validators = []
     version = None
 
     def __init__(self, *args, **kwargs):
@@ -178,7 +174,7 @@ class IPPrefixField(ConvertOnAssignField):
 
         super(IPPrefixField, self).__init__(*args, **kwargs)
 
-        self.default_validators.append(IPPrefixValidator(self))
+        self.validators.append(IPPrefixValidator(self))
 
     def get_internal_type(self):
         return "CharField"
@@ -207,16 +203,13 @@ class MacAddressField(ConvertOnAssignField):
     max_length = 17
     description = _("Mac Address")
     default_error_messages = {}
-    default_validators = []
+    default_validators = [
+        RegexValidator(r'(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$')
+        ]
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = self.max_length
         super(MacAddressField, self).__init__(*args, **kwargs)
 
-        self.default_validators.append(
-            RegexValidator(r'(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$')
-        )
-
     def get_internal_type(self):
         return "CharField"
-

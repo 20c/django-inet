@@ -4,6 +4,8 @@
 ## [Unreleased]
 ### Added
 ### Fixed
+- fix validator meta
+
 ### Changed
 ### Deprecated
 ### Removed

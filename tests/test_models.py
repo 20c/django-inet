@@ -14,15 +14,46 @@ from django_inet.models import (
 from models import FullModel
 
 
+def assert_ip_validator(obj):
+    """
+    assert the validator is set correctly and referring to the correct object
+    """
+    assert 0 == len(obj.default_validators)
+    assert 1 == len(obj.validators)
+    assert obj == obj.validators[0].field
+    assert obj.version == obj.validators[0].field.version
+
+
 class ModelTests(TestCase):
     """ test model functionality """
 
     def test_init(self):
-        new = URLField()
-        new = ASNField()
-        new = IPAddressField()
-        new = IPPrefixField()
-        new = MacAddressField()
+        model = FullModel()
+
+        new0 = URLField()
+        new1 = URLField()
+        assert 1 == len(new0.default_validators)
+        assert 1 == len(new1.default_validators)
+
+        new0 = ASNField()
+        new1 = ASNField()
+        assert 0 == len(new0.default_validators)
+        assert 0 == len(new1.default_validators)
+
+        new0 = IPAddressField()
+        new1 = IPAddressField()
+        assert_ip_validator(new0)
+        assert_ip_validator(new1)
+
+        new0 = IPPrefixField()
+        new1 = IPPrefixField()
+        assert_ip_validator(new0)
+        assert_ip_validator(new1)
+
+        new0 = MacAddressField()
+        new1 = MacAddressField()
+        assert 1 == len(new0.default_validators)
+        assert 1 == len(new1.default_validators)
 
     def test_blank(self):
         model = FullModel()
