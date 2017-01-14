@@ -4,12 +4,15 @@
 ## [Unreleased]
 ### Added
 ### Fixed
-- fix validator meta
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+
+## [0.3.2]
+### Fixed
+- fix validator meta corruption
 
 
 ## [0.3.1]
