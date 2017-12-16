@@ -1,29 +1,26 @@
-
 language: python
-python: 2.7
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+sudo: false
 branches:
   except:
     - gh-pages
 env:
-  - TOX_ENV=py27-cov-init
-  - TOX_ENV=py27-django18
-  - TOX_ENV=py33-django18
-  - TOX_ENV=py34-django18
-  - TOX_ENV=py35-django18
-  - TOX_ENV=py27-django19
-  - TOX_ENV=py34-django19
-  - TOX_ENV=py35-django19
-  - TOX_ENV=py27-django110
-  - TOX_ENV=py34-django110
-  - TOX_ENV=py35-django110
+  - DJANGO=1.8
+  - DJANGO=1.9
+  - DJANGO=1.10
+  - DJANGO=1.11
+  - DJANGO=2.0
 before_install:
   - sudo apt-get -qq update
 install:
   - python -m pip install -U pip
   - python -m easy_install -U setuptools
-  - pip install tox
-  - pip install codecov
+  - pip install tox-travis codecov
 script:
-  - tox -e $TOX_ENV
+  - tox
 after_success:
-  - codecov
+  - codecov -e DJANGO
