@@ -2,7 +2,7 @@
 # django-inet
 
 [![PyPI](https://img.shields.io/pypi/v/django-inet.svg?maxAge=3600)](https://pypi.python.org/pypi/django-inet)
-[![PyPI](https://img.shields.io/pypi/pyversions/django-inet.svg)]()
+[![PyPI](https://img.shields.io/pypi/pyversions/django-inet.svg)](https://pypi.python.org/pypi/django-inet)
 [![Travis CI](https://img.shields.io/travis/20c/django-inet.svg?maxAge=3600)](https://travis-ci.org/20c/django-inet)
 [![Code Health](https://landscape.io/github/20c/django-inet/master/landscape.svg?style=flat)](https://landscape.io/github/20c/django-inet/master)
 [![Codecov](https://img.shields.io/codecov/c/github/20c/django-inet/master.svg?maxAge=3600)](https://codecov.io/github/20c/django-inet)
