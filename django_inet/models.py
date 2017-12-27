@@ -101,8 +101,8 @@ class ASNField(models.PositiveIntegerField):
     """
     Autonomous System Number
     """
-    def __init__(self, *args, **kwargs):
-        super(ASNField, self).__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super(ASNField, self).__init__(**kwargs)
 
 
 def wrap_ip_ctor(ctor):
@@ -125,13 +125,13 @@ class IPAddressField(ConvertOnAssignField):
     description = _("IP Address")
     version = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         kwargs['max_length'] = self.max_length
 
         self.version = kwargs.pop('version', None)
         self._ctor = wrap_ip_ctor(addr_ctor(self.version))
 
-        super(IPAddressField, self).__init__(*args, **kwargs)
+        super(IPAddressField, self).__init__(**kwargs)
 
         self.validators.append(IPAddressValidator(self))
 
@@ -166,13 +166,13 @@ class IPPrefixField(ConvertOnAssignField):
     description = _("IP Prefix")
     version = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         kwargs['max_length'] = self.max_length
 
         self.version = kwargs.pop('version', None)
         self._ctor = wrap_ip_ctor(prefix_ctor(self.version))
 
-        super(IPPrefixField, self).__init__(*args, **kwargs)
+        super(IPPrefixField, self).__init__(**kwargs)
 
         self.validators.append(IPPrefixValidator(self))
 
@@ -207,9 +207,9 @@ class MacAddressField(ConvertOnAssignField):
         RegexValidator(r'(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$')
         ]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         kwargs['max_length'] = self.max_length
-        super(MacAddressField, self).__init__(*args, **kwargs)
+        super(MacAddressField, self).__init__(**kwargs)
 
     def get_internal_type(self):
         return "CharField"
