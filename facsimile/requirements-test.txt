@@ -5,4 +5,4 @@ pytest-cov>=2.3,<3
 pytest-django>=3
 tox>=3.13,<3.14
 # drf dropped support for dj{18,19} in 3.7.4
-djangorestframework>=3.9,<3.10
+djangorestframework>=3.10,<3.11
