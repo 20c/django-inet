@@ -9,11 +9,9 @@ branches:
   except:
     - gh-pages
 env:
-  - DJANGO=1.8
-  - DJANGO=1.9
-  - DJANGO=1.10
   - DJANGO=1.11
   - DJANGO=2.0
+  - DJANGO=2.2
 matrix:
   fast_finish: true
   exclude:
@@ -25,6 +23,8 @@ matrix:
       env: DJANGO=1.10
     - python: "2.7"
       env: DJANGO=2.0
+    - python: "2.7"
+      env: DJANGO=2.2
 before_install:
   - sudo apt-get -qq update
 install:
