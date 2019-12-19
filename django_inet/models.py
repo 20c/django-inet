@@ -156,7 +156,7 @@ class IPAddressField(ConvertOnAssignField):
         return self._ctor(value)
 
     def value_to_string(self, obj):
-        value = self._get_val_from_obj(obj)
+        value = self.value_from_object(obj)
         return str(value)
 
 
@@ -193,7 +193,7 @@ class IPPrefixField(ConvertOnAssignField):
         return smart_text(value)
 
     def value_to_string(self, obj):
-        return smart_text(self._get_val_from_obj(obj))
+        return smart_text(self.value_from_object(obj))
 
 
 class MacAddressField(ConvertOnAssignField):
