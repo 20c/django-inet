@@ -24,8 +24,7 @@ Addresses and Prefixes are stored and strings and converted to ipaddress.IPv{4,6
 Version can be set to 4 or 6 to force a version, or left as None to use
 either.
 
-Tested in python 2.7, 3.3, 3.4, 3.5 and django 1.8, 1.9, 1.10
-
+Tested in python 2.7, 3.3, 3.4, 3.5 and django 1.8, 1.9, 1.10, 1.11, 2.0, 2.2
 
 ## Quickstart
 
