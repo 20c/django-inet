@@ -1,0 +1,30 @@
+0.2.0:
+  added:
+  - test stubs
+  fixed:
+  - correct requirements
+0.3.0:
+  added:
+  - python 3 support
+  - django 1.10 support
+  - better tests
+  deprecated:
+  - URLField
+0.3.1:
+  fixed:
+  - IPPrefixValidator overwriting all field meta
+0.3.2:
+  fixed:
+  - fix validator meta corruption
+0.4.0:
+  added:
+  - django 2.0, 2.2 support
+  changed:
+  - 'move to ctl for package/release management '
+Unreleased:
+  added: []
+  changed: []
+  deprecated: []
+  fixed: []
+  removed: []
+  security: []
