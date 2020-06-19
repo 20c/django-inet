@@ -143,7 +143,7 @@ class IPAddressField(ConvertOnAssignField):
             return str(value)
         return None
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if not value:
             return None
         return self._ctor(value)
