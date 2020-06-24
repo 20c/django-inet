@@ -4,8 +4,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator as DjangoURLValidator
 from django.core.validators import RegexValidator
-from django.utils.encoding import smart_text
-from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import smart_str
+from django.utils.translation import gettext_lazy as _
 import warnings
 
 
@@ -108,7 +108,7 @@ class ASNField(models.PositiveIntegerField):
 def wrap_ip_ctor(ctor):
     def func(value):
         try:
-            return ctor(smart_text(value))
+            return ctor(smart_str(value))
 
         except (ValueError, ipaddress.AddressValueError) as e:
             raise ValidationError(e)
@@ -143,7 +143,7 @@ class IPAddressField(ConvertOnAssignField):
             return str(value)
         return None
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection):
         if not value:
             return None
         return self._ctor(value)
@@ -190,10 +190,10 @@ class IPPrefixField(ConvertOnAssignField):
         value = super(IPPrefixField, self).get_prep_value(value)
         if value is None:
             return None
-        return smart_text(value)
+        return smart_str(value)
 
     def value_to_string(self, obj):
-        return smart_text(self.value_from_object(obj))
+        return smart_str(self.value_from_object(obj))
 
 
 class MacAddressField(ConvertOnAssignField):
