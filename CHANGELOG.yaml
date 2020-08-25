@@ -21,9 +21,11 @@
   - django 2.0, 2.2 support
   changed:
   - 'move to ctl for package/release management '
-Unreleased:
+0.5.0:
   added:
   - django 3.0 support
+Unreleased:
+  added: []
   changed: []
   deprecated: []
   fixed: []
