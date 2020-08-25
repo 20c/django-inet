@@ -22,7 +22,8 @@
   changed:
   - 'move to ctl for package/release management '
 Unreleased:
-  added: []
+  added:
+  - django 3.0 support
   changed: []
   deprecated: []
   fixed: []
