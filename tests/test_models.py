@@ -69,6 +69,14 @@ class ModelTests(TestCase):
             model.asn = 'invalid'
             model.full_clean()
 
+        with pytest.raises(ValidationError):
+            model.asn = -1
+            model.full_clean()
+
+        model.asn = 4294967295
+        model.full_clean()
+        assert model.asn == 4294967295
+
     def test_ipaddress(self):
         model = FullModel()
         model.ip_address = '10.0.0.0'
