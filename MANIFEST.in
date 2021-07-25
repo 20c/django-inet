@@ -1,4 +1,0 @@
-include LICENSE
-recursive-include Ctl *.txt
-recursive-include django_inet *.py
-include Ctl/VERSION
