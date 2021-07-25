@@ -1,19 +1,20 @@
-
 import ipaddress
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.core.validators import URLValidator as DjangoURLValidator
-from django.core.validators import MinValueValidator, RegexValidator
-from django.utils.encoding import smart_str
-from django.utils.translation import gettext_lazy as _
 import warnings
 
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import URLValidator as DjangoURLValidator
+from django.db import models
+from django.utils.encoding import smart_str
+from django.utils.translation import gettext_lazy as _
 
-class ConvertOnAssign(object):
+
+class ConvertOnAssign:
     """
     Calls `field.to_python()` on assign
 
     """
+
     def __init__(self, field):
         self.field = field
 
@@ -28,7 +29,7 @@ class ConvertOnAssign(object):
 
 class ConvertOnAssignField(models.Field):
     def contribute_to_class(self, cls, name):
-        super(ConvertOnAssignField, self).contribute_to_class(cls, name)
+        super().contribute_to_class(cls, name)
         setattr(cls, name, ConvertOnAssign(self))
 
 
@@ -39,7 +40,7 @@ def addr_ctor(version=None):
         elif version == 6:
             return ipaddress.IPv6Address
         else:
-            raise ValueError('unknown version')
+            raise ValueError("unknown version")
     else:
         return ipaddress.ip_address
 
@@ -51,16 +52,17 @@ def prefix_ctor(version=None):
         elif version == 6:
             return ipaddress.IPv6Network
         else:
-            raise ValueError('unknown version')
+            raise ValueError("unknown version")
     else:
         return ipaddress.ip_network
 
 
-class IPAddressValidator(object):
+class IPAddressValidator:
     """
     Validates values to be either a v4 or 6 ip address depending
     on the version of the field it is attached to
     """
+
     def __init__(self, field):
         self.field = field
 
@@ -69,10 +71,11 @@ class IPAddressValidator(object):
         wrap_ip_ctor(addr_ctor(self.field.version))(value)
 
 
-class IPPrefixValidator(object):
+class IPPrefixValidator:
     """
     Validates values to be either a v4 or v6 prefix
     """
+
     def __init__(self, field):
         self.field = field
 
@@ -91,24 +94,26 @@ class URLField(models.URLField):
     def __init__(self, *args, **kwargs):
         warnings.warn(
             "URLField has been deprecated and will be removed in version 1",
-            DeprecationWarning, stacklevel=2
-            )
+            DeprecationWarning,
+            stacklevel=2,
+        )
         kwargs["max_length"] = 255
-        super(URLField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class ASNField(models.PositiveIntegerField):
     """
     Autonomous System Number
     """
+
     def __init__(self, **kwargs):
 
         # append MinValueValidator
-        validators = kwargs.get("validators",[])
+        validators = kwargs.get("validators", [])
         validators.append(MinValueValidator(0))
         kwargs.update(validators=validators)
 
-        super(ASNField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
 
 def wrap_ip_ctor(ctor):
@@ -126,18 +131,19 @@ class IPAddressField(ConvertOnAssignField):
     """
     IP Address
     """
+
     empty_strings_allowed = True
     max_length = 39
     description = _("IP Address")
     version = None
 
     def __init__(self, **kwargs):
-        kwargs['max_length'] = self.max_length
+        kwargs["max_length"] = self.max_length
 
-        self.version = kwargs.pop('version', None)
+        self.version = kwargs.pop("version", None)
         self._ctor = wrap_ip_ctor(addr_ctor(self.version))
 
-        super(IPAddressField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validators.append(IPAddressValidator(self))
 
@@ -173,12 +179,12 @@ class IPPrefixField(ConvertOnAssignField):
     version = None
 
     def __init__(self, **kwargs):
-        kwargs['max_length'] = self.max_length
+        kwargs["max_length"] = self.max_length
 
-        self.version = kwargs.pop('version', None)
+        self.version = kwargs.pop("version", None)
         self._ctor = wrap_ip_ctor(prefix_ctor(self.version))
 
-        super(IPPrefixField, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validators.append(IPPrefixValidator(self))
 
@@ -193,7 +199,7 @@ class IPPrefixField(ConvertOnAssignField):
         return self._ctor(value)
 
     def get_prep_value(self, value):
-        value = super(IPPrefixField, self).get_prep_value(value)
+        value = super().get_prep_value(value)
         if value is None:
             return None
         return smart_str(value)
@@ -203,19 +209,17 @@ class IPPrefixField(ConvertOnAssignField):
 
 
 class MacAddressField(ConvertOnAssignField):
-    """
-    """
+    """ """
+
     empty_strings_allowed = True
     max_length = 17
     description = _("Mac Address")
     default_error_messages = {}
-    default_validators = [
-        RegexValidator(r'(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$')
-        ]
+    default_validators = [RegexValidator(r"(?i)^([0-9a-f]{2}[-:]){5}[0-9a-f]{2}$")]
 
     def __init__(self, **kwargs):
-        kwargs['max_length'] = self.max_length
-        super(MacAddressField, self).__init__(**kwargs)
+        kwargs["max_length"] = self.max_length
+        super().__init__(**kwargs)
 
     def get_internal_type(self):
         return "CharField"

@@ -1,5 +1,5 @@
-
 from django.db import models
+
 from django_inet.models import (
     ASNField,
     IPAddressField,
@@ -21,7 +21,5 @@ class FullModel(models.Model):
     prefix6 = IPPrefixField(version=6, null=True, blank=True)
     mac = MacAddressField(null=True, blank=True)
 
-
     class Meta:
-        app_label = 'django_inet.tests'
-
+        app_label = "django_inet.tests"
