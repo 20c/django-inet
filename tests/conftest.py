@@ -4,6 +4,7 @@ from django.conf import settings
 def pytest_configure():
 
     settings.configure(
+        SECRET_KEY="fA794fWna94bqUlNStQGOli3uB2S1swUPFXwlvI3-Zf6rqsd6pJZ34iwbK34QaHM",
         DEBUG=True,
         TEMPLATE_DEBUG=True,
         INSTALLED_APPS=[

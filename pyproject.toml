@@ -30,12 +30,15 @@ python = "^3.6.2"
 
 [tool.poetry.dev-dependencies]
 # testing
+codecov = "^2.0.5"
 coverage = "*"
 pytest = "^6.0.1"
 pytest-django = "^3.8.0"
 pytest-cov = "*"
 tox = "^3.24.0"
-djangorestframework = "^3"
+#djangorestframework = "^3"
+djangorestframework = ">=3,<4"
+
 
 # linting
 # bandit = "^1.6.2"
