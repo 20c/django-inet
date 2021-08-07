@@ -13,7 +13,7 @@ from django_inet.models import (
     URLField,
 )
 
-from .models import FullModel
+from models import FullModel
 
 
 def assert_ip_validator(obj):
