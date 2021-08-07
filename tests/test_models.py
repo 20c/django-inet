@@ -1,16 +1,18 @@
+import ipaddress
 
+import pytest
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-import ipaddress
-import pytest
 
 from django_inet.models import (
-    URLField,
     ASNField,
     IPAddressField,
+    IPNetworkField,
     IPPrefixField,
     MacAddressField,
+    URLField,
 )
+
 from models import FullModel
 
 
@@ -25,11 +27,9 @@ def assert_ip_validator(obj):
 
 
 class ModelTests(TestCase):
-    """ test model functionality """
+    """test model functionality"""
 
     def test_init(self):
-        model = FullModel()
-
         new0 = URLField()
         new1 = URLField()
         assert 1 == len(new0.default_validators)
@@ -42,6 +42,11 @@ class ModelTests(TestCase):
 
         new0 = IPAddressField()
         new1 = IPAddressField()
+        assert_ip_validator(new0)
+        assert_ip_validator(new1)
+
+        new0 = IPNetworkField()
+        new1 = IPNetworkField()
         assert_ip_validator(new0)
         assert_ip_validator(new1)
 
@@ -66,7 +71,7 @@ class ModelTests(TestCase):
         model.full_clean()
 
         with pytest.raises(ValidationError):
-            model.asn = 'invalid'
+            model.asn = "invalid"
             model.full_clean()
 
         with pytest.raises(ValidationError):
@@ -79,42 +84,41 @@ class ModelTests(TestCase):
 
     def test_ipaddress(self):
         model = FullModel()
-        model.ip_address = '10.0.0.0'
-        assert ipaddress.ip_address(u'10.0.0.0') == model.ip_address
+        model.ip_address = "10.0.0.0"
+        assert ipaddress.ip_address("10.0.0.0") == model.ip_address
 
         with pytest.raises(ValidationError):
-            model.ip_address = 'invalid'
+            model.ip_address = "invalid"
 
     def test_ipv4(self):
         model = FullModel()
-        model.ipv4 = '10.0.0.0'
-        assert ipaddress.ip_address(u'10.0.0.0') == model.ipv4
+        model.ipv4 = "10.0.0.0"
+        assert ipaddress.ip_address("10.0.0.0") == model.ipv4
 
         with pytest.raises(ValidationError):
-            model.ipv4 = '1::1'
+            model.ipv4 = "1::1"
 
     def test_ipv6(self):
         model = FullModel()
-        model.ipv6 = '10::'
-        assert ipaddress.ip_address(u'10::') == model.ipv6
+        model.ipv6 = "10::"
+        assert ipaddress.ip_address("10::") == model.ipv6
 
         with pytest.raises(ValidationError):
-            model.ipv6 = '10.0.0.0'
+            model.ipv6 = "10.0.0.0"
 
-    def test_ipprefix(self):
+    def test_ipnetwork(self):
         model = FullModel()
-        model.prefix = '10.0.0.0/8'
+        model.prefix = "10.0.0.0/8"
 
         with pytest.raises(ValidationError):
-            model.prefix = 'invalid'
+            model.prefix = "invalid"
 
     def test_mac(self):
         model = FullModel()
-        model.mac = 'Ff:00:00:12:34:56'
+        model.mac = "Ff:00:00:12:34:56"
         model.full_clean()
-        assert 'Ff:00:00:12:34:56' == model.mac
+        assert "Ff:00:00:12:34:56" == model.mac
 
         with pytest.raises(ValidationError):
-            model.mac = 'invalid'
+            model.mac = "invalid"
             model.full_clean()
-
