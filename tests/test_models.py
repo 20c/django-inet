@@ -3,6 +3,7 @@ import ipaddress
 import pytest
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from models import FullModel
 
 from django_inet.models import (
     ASNField,
@@ -12,8 +13,6 @@ from django_inet.models import (
     MacAddressField,
     URLField,
 )
-
-from models import FullModel
 
 
 def assert_ip_validator(obj):
