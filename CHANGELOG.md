@@ -4,6 +4,17 @@
 ## Unreleased
 
 
+## 1.0.0
+### Added
+- support for python up to 3.9
+- support for django-3.2
+### Changed
+- IPPrefixField to IPNetworkField
+### Removed
+- support for python <3.6
+- support for django <2.2
+
+
 ## 0.5.0
 ### Added
 - django 3.0 support
@@ -13,7 +24,7 @@
 ### Added
 - django 2.0, 2.2 support
 ### Changed
-- move to ctl for package/release management
+- move to ctl for package/release management 
 
 
 ## 0.3.2
