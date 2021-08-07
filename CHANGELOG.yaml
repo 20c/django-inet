@@ -2,7 +2,8 @@ Unreleased:
   added:
     - support for python up to 3.9
     - support for django-3.2
-  changed: []
+  changed:
+    - IPPrefixField to IPNetworkField
   deprecated: []
   fixed: []
   removed:

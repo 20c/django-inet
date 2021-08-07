@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import IPAddressValidator, IPPrefixValidator
+from .models import IPAddressValidator, IPNetworkValidator
 
 
 class IPAddressField(serializers.CharField):
@@ -12,10 +12,10 @@ class IPAddressField(serializers.CharField):
         self.validators.append(IPAddressValidator(self))
 
 
-class IPPrefixField(serializers.CharField):
+class IPNetworkField(serializers.CharField):
     version = 0
 
     def __init__(self, **kwargs):
         self.version = kwargs.pop("version", None)
         super().__init__(**kwargs)
-        self.validators.append(IPPrefixValidator(self))
+        self.validators.append(IPNetworkValidator(self))

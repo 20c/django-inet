@@ -3,15 +3,17 @@ import ipaddress
 import pytest
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from models import FullModel
 
 from django_inet.models import (
     ASNField,
     IPAddressField,
+    IPNetworkField,
     IPPrefixField,
     MacAddressField,
     URLField,
 )
+
+from .models import FullModel
 
 
 def assert_ip_validator(obj):
@@ -28,8 +30,6 @@ class ModelTests(TestCase):
     """test model functionality"""
 
     def test_init(self):
-        model = FullModel()
-
         new0 = URLField()
         new1 = URLField()
         assert 1 == len(new0.default_validators)
@@ -42,6 +42,11 @@ class ModelTests(TestCase):
 
         new0 = IPAddressField()
         new1 = IPAddressField()
+        assert_ip_validator(new0)
+        assert_ip_validator(new1)
+
+        new0 = IPNetworkField()
+        new1 = IPNetworkField()
         assert_ip_validator(new0)
         assert_ip_validator(new1)
 
@@ -101,7 +106,7 @@ class ModelTests(TestCase):
         with pytest.raises(ValidationError):
             model.ipv6 = "10.0.0.0"
 
-    def test_ipprefix(self):
+    def test_ipnetwork(self):
         model = FullModel()
         model.prefix = "10.0.0.0/8"
 

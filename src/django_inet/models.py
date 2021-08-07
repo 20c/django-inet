@@ -71,7 +71,7 @@ class IPAddressValidator:
         wrap_ip_ctor(addr_ctor(self.field.version))(value)
 
 
-class IPPrefixValidator:
+class IPNetworkValidator:
     """
     Validates values to be either a v4 or v6 prefix
     """
@@ -172,7 +172,7 @@ class IPAddressField(ConvertOnAssignField):
         return str(value)
 
 
-class IPPrefixField(ConvertOnAssignField):
+class IPNetworkField(ConvertOnAssignField):
     empty_strings_allowed = True
     max_length = 43
     description = _("IP Prefix")
@@ -186,7 +186,7 @@ class IPPrefixField(ConvertOnAssignField):
 
         super().__init__(**kwargs)
 
-        self.validators.append(IPPrefixValidator(self))
+        self.validators.append(IPNetworkValidator(self))
 
     def get_internal_type(self):
         return "CharField"
@@ -206,6 +206,10 @@ class IPPrefixField(ConvertOnAssignField):
 
     def value_to_string(self, obj):
         return smart_str(self.value_from_object(obj))
+
+
+# Alias to original name
+IPPrefixField = IPNetworkField
 
 
 class MacAddressField(ConvertOnAssignField):

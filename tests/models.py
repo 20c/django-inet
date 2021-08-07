@@ -3,7 +3,7 @@ from django.db import models
 from django_inet.models import (
     ASNField,
     IPAddressField,
-    IPPrefixField,
+    IPNetworkField,
     MacAddressField,
     URLField,
 )
@@ -16,9 +16,9 @@ class FullModel(models.Model):
     ipv6 = IPAddressField(version=6, null=True, blank=True)
     ip_address = IPAddressField(null=True, blank=True)
 
-    prefix = IPPrefixField(null=True, blank=True)
-    prefix4 = IPPrefixField(version=4, null=True, blank=True)
-    prefix6 = IPPrefixField(version=6, null=True, blank=True)
+    prefix = IPNetworkField(null=True, blank=True)
+    prefix4 = IPNetworkField(version=4, null=True, blank=True)
+    prefix6 = IPNetworkField(version=6, null=True, blank=True)
     mac = MacAddressField(null=True, blank=True)
 
     class Meta:

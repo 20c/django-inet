@@ -1,18 +1,17 @@
 import unittest
 
-import pytest
 from rest_framework import serializers
 
-from django_inet.rest import IPAddressField, IPPrefixField
+from django_inet.rest import IPAddressField, IPNetworkField
 
 
 class InetSerializer(serializers.Serializer):
     ip = IPAddressField()
     ip4 = IPAddressField(version=4)
     ip6 = IPAddressField(version=6)
-    prefix = IPPrefixField()
-    prefix4 = IPPrefixField(version=4)
-    prefix6 = IPPrefixField(version=6)
+    prefix = IPNetworkField()
+    prefix4 = IPNetworkField(version=4)
+    prefix6 = IPNetworkField(version=6)
 
 
 class RestTestCase(unittest.TestCase):
