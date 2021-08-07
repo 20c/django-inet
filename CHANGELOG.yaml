@@ -1,3 +1,14 @@
+Unreleased:
+  added:
+    - support for python up to 3.9
+    - support for django-3.2
+  changed: []
+  deprecated: []
+  fixed: []
+  removed:
+    - support for python <3.6
+    - support for django <2.2
+  security: []
 0.2.0:
   added:
   - test stubs
@@ -24,10 +35,3 @@
 0.5.0:
   added:
   - django 3.0 support
-Unreleased:
-  added: []
-  changed: []
-  deprecated: []
-  fixed: []
-  removed: []
-  security: []
