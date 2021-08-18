@@ -19,3 +19,7 @@ class IPNetworkField(serializers.CharField):
         self.version = kwargs.pop("version", None)
         super().__init__(**kwargs)
         self.validators.append(IPNetworkValidator(self))
+
+
+# Alias to original name
+IPPrefixField = IPNetworkField
