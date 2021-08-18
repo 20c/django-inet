@@ -4,6 +4,11 @@
 ## Unreleased
 
 
+## 1.0.1
+### Fixed
+- alias for original rest.IPPrefixField
+
+
 ## 1.0.0
 ### Added
 - support for python up to 3.9
