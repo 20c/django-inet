@@ -4,7 +4,7 @@ Unreleased:
   changed: []
   deprecated: []
   fixed:
-  - mgiration support for ASNs (#14)
+  - made migrations idempotent for ASNs (#14)
   removed:
   - python 3.6 support
   security: []
