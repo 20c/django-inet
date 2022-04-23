@@ -101,7 +101,7 @@ class URLField(models.URLField):
         super().__init__(*args, **kwargs)
 
 
-class ASNField(models.PositiveIntegerField):
+class ASNField(models.IntegerField):
     """
     Autonomous System Number
     """
@@ -110,8 +110,9 @@ class ASNField(models.PositiveIntegerField):
 
         # append MinValueValidator
         validators = kwargs.get("validators", [])
-        validators.append(MinValueValidator(0))
-        kwargs.update(validators=validators)
+        if MinValueValidator(0) not in validators:
+            validators.append(MinValueValidator(0))
+            kwargs.update({"validators":validators})
 
         super().__init__(**kwargs)
 
