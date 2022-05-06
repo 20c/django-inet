@@ -4,6 +4,15 @@
 ## Unreleased
 
 
+## 1.1.0
+### Added
+- python 3.10 support
+### Fixed
+- made migrations idempotent for ASNs (#14)
+### Removed
+- python 3.6 support
+
+
 ## 1.0.1
 ### Fixed
 - alias for original rest.IPPrefixField
@@ -29,7 +38,7 @@
 ### Added
 - django 2.0, 2.2 support
 ### Changed
-- move to ctl for package/release management
+- move to ctl for package/release management 
 
 
 ## 0.3.2
