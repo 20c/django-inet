@@ -112,7 +112,7 @@ class ASNField(models.IntegerField):
         validators = kwargs.get("validators", [])
         if MinValueValidator(0) not in validators:
             validators.append(MinValueValidator(0))
-            kwargs.update({"validators":validators})
+            kwargs.update({"validators": validators})
 
         super().__init__(**kwargs)
 

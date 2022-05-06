@@ -1,3 +1,13 @@
+Unreleased:
+  added:
+  - python 3.10 support
+  changed: []
+  deprecated: []
+  fixed:
+  - made migrations idempotent for ASNs (#14)
+  removed:
+  - python 3.6 support
+  security: []
 0.2.0:
   added:
   - test stubs
@@ -36,10 +46,3 @@
 1.0.1:
   fixed:
   - alias for original rest.IPPrefixField
-Unreleased:
-  added: []
-  changed: []
-  deprecated: []
-  fixed: []
-  removed: []
-  security: []
