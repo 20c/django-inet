@@ -40,7 +40,7 @@
 ### Added
 - django 2.0, 2.2 support
 ### Changed
-- move to ctl for package/release management 
+- move to ctl for package/release management
 
 
 ## 0.3.2
