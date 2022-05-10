@@ -101,7 +101,7 @@ class URLField(models.URLField):
         super().__init__(*args, **kwargs)
 
 
-class ASNField(models.IntegerField):
+class ASNField(models.PositiveIntegerField):
     """
     Autonomous System Number
     """

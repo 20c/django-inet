@@ -2,6 +2,8 @@
 
 
 ## Unreleased
+### Fixed
+- fix issue introduced in 1.1.0 that would cause it to no longer be an unsigned int at the database schema level
 
 
 ## 1.1.0
@@ -38,7 +40,7 @@
 ### Added
 - django 2.0, 2.2 support
 ### Changed
-- move to ctl for package/release management
+- move to ctl for package/release management 
 
 
 ## 0.3.2
