@@ -2,6 +2,8 @@
 
 
 ## Unreleased
+### Fixed
+- fix issue introduced in 1.1.0 that would cause it to no longer be an unsigned int at the database schema level
 
 
 ## 1.1.0
