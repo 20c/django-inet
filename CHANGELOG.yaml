@@ -1,7 +1,6 @@
 Unreleased:
   added: []
-  fixed:
-  - fix issue introduced in 1.1.0 that would cause it to no longer be an unsigned int at the database schema level
+  fixed: []
   changed: []
   deprecated: []
   removed: []
@@ -51,3 +50,7 @@ Unreleased:
   - made migrations idempotent for ASNs (#14)
   removed:
   - python 3.6 support
+1.1.1:
+  fixed:
+  - fix issue introduced in 1.1.0 that would cause it to no longer be an unsigned
+    int at the database schema level
